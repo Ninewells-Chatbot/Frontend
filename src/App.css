@@ -115,8 +115,10 @@ body {
 
 .chat-input input {
   flex: 1;
+  color:black;
   padding: 10px 12px;
   border: 1px solid #e5e7eb;
+  background:white;
   border-radius: 6px;
   outline: none;
   font-size: 14px;
@@ -158,3 +160,60 @@ body {
   white-space: pre-line;   /* ⭐ THIS FIXES YOUR ISSUE */
 }
 
+/* Message row layout */
+.msg-row {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 10px;
+}
+
+.user-row {
+  justify-content: flex-end;
+}
+
+.bot-row {
+  justify-content: flex-start;
+}
+
+/* Message bubbles */
+.user-msg {
+  background: #0096C7;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 14px 14px 4px 14px;
+  max-width: 70%;
+  white-space: pre-line;
+}
+
+.bot-msg {
+  background: #f1f5f9;
+  color: #111;
+  padding: 10px 14px;
+  border-radius: 14px 14px 14px 4px;
+  max-width: 70%;
+  white-space: pre-line;
+}
+
+/* Icons */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 6px;
+}
+
+.bot-icon {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+.user-icon {
+  background: #e0e7ff;
+  color: #3730a3;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}

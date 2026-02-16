@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
+import { User, Stethoscope } from "lucide-react";
 
 const API_URL = `${import.meta.env.VITE_BACKEND_URL}`;
-console.log(API_URL)
-
+console.log(API_URL);
 
 // Function to format bot messages - remove markdown formatting
 const formatBotMessage = (text) => {
@@ -18,7 +18,7 @@ const formatBotMessage = (text) => {
 
 export default function App() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([{role:"assistant",text:"Hello and welcome to Ninewells Hospital. How can I help you today?"}]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [sessionId, setSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,10 @@ export default function App() {
 
       setSessionId(res.data.session_id);
 
-      const botMsg = { role: "assistant", text: formatBotMessage(res.data.response) };
+      const botMsg = {
+        role: "assistant",
+        text: formatBotMessage(res.data.response),
+      };
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
       console.error(err);
@@ -51,6 +54,21 @@ export default function App() {
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (open && messages.length === 0) {
+      const timer = setTimeout(() => {
+        setMessages([
+          {
+            role: "assistant",
+            text: "Hello and welcome to Ninewells Hospital. I’m here to help you with channeling appointments and any hospital inquiries. How may I assist you today?",
+          },
+        ]);
+      }, 1000); // 1 second delay
+
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
 
   return (
     <div>
@@ -66,12 +84,36 @@ export default function App() {
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={m.role === "user" ? "user-msg" : "bot-msg"}
+                className={`msg-row ${m.role === "user" ? "user-row" : "bot-row"}`}
               >
-                {m.text}
+                {/* Assistant icon */}
+                {m.role === "assistant" && (
+                  <div className="icon bot-icon">
+                    <Stethoscope size={18} />
+                  </div>
+                )}
+
+                <div className={m.role === "user" ? "user-msg" : "bot-msg"}>
+                  {m.text}
+                </div>
+
+                {/* User icon */}
+                {m.role === "user" && (
+                  <div className="icon user-icon">
+                    <User size={18} />
+                  </div>
+                )}
               </div>
             ))}
-            {loading && <div className="bot-msg">Typing...</div>}
+
+            {loading && (
+              <div className="msg-row bot-row">
+                <div className="icon bot-icon">
+                  <Stethoscope size={18} />
+                </div>
+                <div className="bot-msg">Typing...</div>
+              </div>
+            )}
           </div>
 
           <div className="chat-input">
@@ -82,7 +124,9 @@ export default function App() {
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               disabled={loading}
             />
-            <button onClick={sendMessage} disabled={loading}>Send</button>
+            <button onClick={sendMessage} disabled={loading}>
+              Send
+            </button>
           </div>
         </div>
       )}
