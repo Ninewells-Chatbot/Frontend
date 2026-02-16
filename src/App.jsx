@@ -18,7 +18,7 @@ const formatBotMessage = (text) => {
 
 export default function App() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([{role:"assistant",text:"Hello and welcome to Ninewells Hospital. How can I help you today?"}]);
   const [input, setInput] = useState("");
   const [sessionId, setSessionId] = useState(null);
   const [loading, setLoading] = useState(false);
